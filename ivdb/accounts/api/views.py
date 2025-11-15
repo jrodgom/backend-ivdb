@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -19,3 +19,12 @@ class ProfileView(APIView):
             'username': user.username,
             'email': user.email,
         })
+    
+    def delete(self, request):
+        user = request.user
+        username = user.username
+        user.delete()
+        return Response(
+            {'message': f'Usuario {username} eliminado correctamente'},
+            status=status.HTTP_200_OK
+        )

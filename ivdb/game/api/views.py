@@ -10,4 +10,4 @@ class GameViewSet(viewsets.ModelViewSet):
     search_fields = ['title', 'genre', 'platform']
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        serializer.save()

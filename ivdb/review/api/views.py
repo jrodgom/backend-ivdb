@@ -1,8 +1,9 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db.models import Avg
 from review.models import Review
+from game.models import Game
 from .serializers import ReviewSerializer
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -26,3 +27,33 @@ class ReviewViewSet(viewsets.ModelViewSet):
             return Response({"error": "game parameter is required"}, status=400)
         avg = Review.objects.filter(game_id=game_id).aggregate(Avg('rating'))['rating__avg']
         return Response({'game_id': game_id, 'average_rating': avg})
+    
+    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def my_reviews(self, request):
+        """Obtiene todas las reseñas del usuario actual"""
+        reviews = Review.objects.filter(user=request.user).select_related('game').order_by('-id')
+        serializer = self.get_serializer(reviews, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def user_review(self, request):
+        """Obtiene la review del usuario actual para un juego específico por título"""
+        game_title = request.query_params.get('game_title')
+        if not game_title:
+            return Response({"error": "game_title parameter is required"}, status=400)
+        
+        try:
+            # Búsqueda case-insensitive
+            game = Game.objects.filter(title__iexact=game_title).first()
+            if not game:
+                return Response({"detail": "Game not found"}, status=status.HTTP_404_NOT_FOUND)
+            
+            review = Review.objects.filter(user=request.user, game=game).first()
+            
+            if review:
+                serializer = self.get_serializer(review)
+                return Response(serializer.data)
+            else:
+                return Response({"detail": "No review found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
