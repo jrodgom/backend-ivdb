@@ -37,6 +37,8 @@ def import_games_from_rawg(pages=10, page_size=100):
             platform = ", ".join(
                 [p["platform"]["name"] for p in game_data.get("platforms", [])]
             )
+            metacritic = game_data.get("metacritic")  # Obtener puntuación de Metacritic
+            rating = game_data.get("rating")  # Obtener rating de RAWG (0-5)
 
             # Evita duplicados
             if not Game.objects.filter(title=title).exists():
@@ -48,6 +50,8 @@ def import_games_from_rawg(pages=10, page_size=100):
                     platform=platform,
                     developer="",
                     cover_image=cover_image,
+                    metacritic=metacritic,
+                    rating=rating,
                 )
                 print(f"✅ Añadido: {title}")
             else:

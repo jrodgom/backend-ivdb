@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class Game(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
@@ -9,6 +8,8 @@ class Game(models.Model):
     platform = models.CharField(max_length=100, blank=True)
     developer = models.CharField(max_length=100, blank=True)
     cover_image = models.URLField(blank=True)
+    metacritic = models.IntegerField(null=True, blank=True)
+    rating = models.FloatField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

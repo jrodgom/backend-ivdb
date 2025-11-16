@@ -21,7 +21,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
     
     def update(self, request, *args, **kwargs):
-        """Permitir actualizar solo reviews propias"""
         review = self.get_object()
         if review.user != request.user:
             return Response(
@@ -31,7 +30,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
     
     def partial_update(self, request, *args, **kwargs):
-        """Permitir actualizar parcialmente solo reviews propias"""
         review = self.get_object()
         if review.user != request.user:
             return Response(
@@ -41,7 +39,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return super().partial_update(request, *args, **kwargs)
     
     def destroy(self, request, *args, **kwargs):
-        """Permitir eliminar solo reviews propias"""
         review = self.get_object()
         if review.user != request.user:
             return Response(
@@ -60,20 +57,17 @@ class ReviewViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def my_reviews(self, request):
-        """Obtiene todas las reseñas del usuario actual"""
         reviews = Review.objects.filter(user=request.user).select_related('game').order_by('-id')
         serializer = self.get_serializer(reviews, many=True)
         return Response(serializer.data)
     
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def user_review(self, request):
-        """Obtiene la review del usuario actual para un juego específico por título"""
         game_title = request.query_params.get('game_title')
         if not game_title:
             return Response({"error": "game_title parameter is required"}, status=400)
         
         try:
-            # Búsqueda case-insensitive
             game = Game.objects.filter(title__iexact=game_title).first()
             if not game:
                 return Response({"detail": "Game not found"}, status=status.HTTP_404_NOT_FOUND)

@@ -22,6 +22,7 @@ class ProfileView(APIView):
             'email': user.email,
             'bio': profile.bio if profile else "",
             'is_staff': user.is_staff,
+            'date_joined': user.date_joined,
         })
     
     def patch(self, request):
