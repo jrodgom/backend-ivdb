@@ -19,6 +19,36 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+    
+    def update(self, request, *args, **kwargs):
+        """Permitir actualizar solo reviews propias"""
+        review = self.get_object()
+        if review.user != request.user:
+            return Response(
+                {"error": "No tienes permiso para editar esta reseña"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().update(request, *args, **kwargs)
+    
+    def partial_update(self, request, *args, **kwargs):
+        """Permitir actualizar parcialmente solo reviews propias"""
+        review = self.get_object()
+        if review.user != request.user:
+            return Response(
+                {"error": "No tienes permiso para editar esta reseña"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().partial_update(request, *args, **kwargs)
+    
+    def destroy(self, request, *args, **kwargs):
+        """Permitir eliminar solo reviews propias"""
+        review = self.get_object()
+        if review.user != request.user:
+            return Response(
+                {"error": "No tienes permiso para eliminar esta reseña"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().destroy(request, *args, **kwargs)
 
     @action(detail=False, methods=['get'])
     def average_rating(self, request):
