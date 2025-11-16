@@ -3,6 +3,8 @@ from game.models import Game
 from django.db.models import Avg
 
 class GameFilter(filters.FilterSet):
+    genre = filters.CharFilter(method='filter_genre')
+    platform = filters.CharFilter(method='filter_platform')
     min_rating = filters.NumberFilter(method='filter_min_rating')
     max_rating = filters.NumberFilter(method='filter_max_rating')
     min_metacritic = filters.NumberFilter(field_name='metacritic', lookup_expr='gte')
@@ -10,7 +12,15 @@ class GameFilter(filters.FilterSet):
     
     class Meta:
         model = Game
-        fields = ['genre', 'platform']
+        fields = []
+    
+    def filter_genre(self, queryset, name, value):
+        """Filtrar por género (búsqueda parcial, case-insensitive)"""
+        return queryset.filter(genre__icontains=value)
+    
+    def filter_platform(self, queryset, name, value):
+        """Filtrar por plataforma (búsqueda parcial, case-insensitive)"""
+        return queryset.filter(platform__icontains=value)
     
     def filter_min_rating(self, queryset, name, value):
         """Filtrar por rating mínimo basado en average_rating de reviews"""

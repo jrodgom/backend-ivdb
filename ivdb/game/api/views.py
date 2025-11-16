@@ -12,8 +12,8 @@ class GameViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = GameFilter
     search_fields = ['title', 'genre', 'platform', 'developer']
-    ordering_fields = ['title', 'release_date', 'created_at', 'metacritic']
-    ordering = ['-created_at']
+    ordering_fields = ['title', 'release_date', 'created_at', 'metacritic', 'rating']
+    ordering = ['-metacritic', '-rating', '-created_at']
 
     def perform_create(self, serializer):
         serializer.save()
