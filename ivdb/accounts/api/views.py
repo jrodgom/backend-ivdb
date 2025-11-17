@@ -5,6 +5,15 @@ from django.contrib.auth.models import User
 from accounts.models import Profile
 from .serializers import RegisterSerializer
 
+class StatsView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        total_users = User.objects.count()
+        return Response({
+            'total_users': total_users
+        })
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [permissions.AllowAny]
