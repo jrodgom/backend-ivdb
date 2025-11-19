@@ -10,6 +10,7 @@ class GameSerializer(serializers.ModelSerializer):
         model = Game
         fields = ['id', 'title', 'description', 'release_date', 'genre', 'platform', 
                   'developer', 'cover_image', 'metacritic', 'rating', 'created_at',
+                  'minimum_requirements', 'recommended_requirements',
                   'average_rating', 'review_count']
     
     def get_average_rating(self, obj):

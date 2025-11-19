@@ -10,6 +10,8 @@ class Game(models.Model):
     cover_image = models.URLField(blank=True)
     metacritic = models.IntegerField(null=True, blank=True)
     rating = models.FloatField(null=True, blank=True)
+    minimum_requirements = models.JSONField(null=True, blank=True)
+    recommended_requirements = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
