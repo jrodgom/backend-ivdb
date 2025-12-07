@@ -47,9 +47,7 @@ class GameViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def import_from_rawg(self, request):
-        """
-        Importa un juego desde RAWG con todos sus datos incluyendo requisitos del sistema
-        """
+        # Importa juego desde RAWG API
         rawg_id = request.data.get('rawg_id')
         
         if not rawg_id:

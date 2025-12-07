@@ -6,10 +6,7 @@ RAWG_API_KEY = "3994c5d1391e4fc8b4e7eca9428d8a8b"  # ⚠️ No subir a GitHub
 
 
 def get_game_requirements(game_id):
-    """
-    Obtiene los requisitos del sistema de un juego desde RAWG.
-    Retorna un diccionario con requisitos mínimos y recomendados para PC.
-    """
+    # Obtiene los requisitos del sistema del juego para PC
     url = f"https://api.rawg.io/api/games/{game_id}"
     params = {"key": RAWG_API_KEY}
     
@@ -35,10 +32,8 @@ def get_game_requirements(game_id):
 
 
 def import_games_from_rawg(pages=10, page_size=100):
-    """
-    Importa juegos desde RAWG y los guarda en la base de datos.
-    Por defecto trae 1000 juegos (10 páginas x 100 por página).
-    """
+    # Importa juegos desde RAWG a la BD
+    # Por defecto 1000 juegos (10 páginas x 100)
 
     for page in range(1, pages + 1):
         params = {
