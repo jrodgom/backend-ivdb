@@ -10,6 +10,7 @@ class GameBasicSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(read_only=True)
+    user_username = serializers.CharField(source='user.username', read_only=True)
     game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.all())
     game_details = GameBasicSerializer(source='game', read_only=True)
 
