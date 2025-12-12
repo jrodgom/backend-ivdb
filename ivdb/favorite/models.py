@@ -9,7 +9,7 @@ class Favorite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'game')  # Un usuario solo puede marcar un juego como favorito una vez
+        unique_together = ('user', 'game')
         ordering = ['-created_at']
 
     def __str__(self):
